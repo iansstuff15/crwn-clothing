@@ -3,7 +3,7 @@ import SignInAndSignUpPage from "../../pages/sign-in-and-sign-up/sign-in-and-sig
 import "./sign-in.scss";
 import CustomButton from "../custom-button/custom-button";
 import FormInput from "../form-input/form-input";
-import { SignInWithGoogle } from "../../firebase/firebase.util";
+import { auth, SignInWithGoogle } from "../../firebase/firebase.util";
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -15,8 +15,15 @@ class SignIn extends React.Component {
     };
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
+    const { email, password } = this.state;
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      this.setState({ email: "", password: "" });
+    } catch (error) {
+      console.log(error);
+    }
     this.setState({ email: "", password: "" });
   };
 
